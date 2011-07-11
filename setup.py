@@ -33,6 +33,7 @@ setup(name = "bankdat",
       packages=find_packes(),
       long_description=read('README'),
       zip_safe = False,
+      include_package_data = True,
       classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
