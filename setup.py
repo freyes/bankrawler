@@ -22,14 +22,14 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
-setup(name = "bankdat",
+setup(name = "bankrawl",
       version = "0.1",
       author = "Felipe Reyes",
       author_email = "freyes@tty.cl",
       description = "A simple tool to gather the data of your bank account",
       license = "GPLv3",
       keywords = "bank report tool",
-      url = "http://tty.cl/bankdat",
+      url = "http://tty.cl/bankrawl",
       packages=find_packes(),
       long_description=read('README'),
       zip_safe = False,
