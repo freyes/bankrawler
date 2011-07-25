@@ -17,7 +17,12 @@ class Configuration(ConfigObj):
             f = open(_filename, "w")
             f.close()
 
-        ConfigObj.__init__(self, _filename)
+        super(Configuration, self).__init__(infile=_filename,
+                                            configspec=self._fspec)
+
+        # TODO: write the config spec
+        # validator = validate.Validator()
+        # self.validate(validator)
 
 
 class Validator(validate.Validator):
