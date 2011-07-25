@@ -3,7 +3,7 @@ import cookielib
 import re
 
 from pprint import pprint
-from vank.config import settings
+from bankrawler.config import settings
 
 class Scraper(object):
 
