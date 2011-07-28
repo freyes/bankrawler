@@ -2,8 +2,12 @@ import re
 import logging
 
 from BeautifulSoup import BeautifulSoup
+from scrapy.selector import XPathSelector
 from exception import LoginError, CartolaError
 from base import Scraper, Vault
+
+
+log = logging.getLogger(__name__)
 
 
 class BciScraper(Scraper):
@@ -17,7 +21,7 @@ class BciScraper(Scraper):
         urls = {"login": "http://www.bci.cl/personas/",
                 "cartola": "https://www.bci.cl/cuentaswls/SuperCartola",
                 }
-        super(BciScraper, self).__init__(urls, user, password)
+        super(BciScraper, self).__init__(urls, user, password, options)
 
     def login(self):
         self._browser.select_form(name="frm")
@@ -28,6 +32,7 @@ class BciScraper(Scraper):
         self._browser["clave"] = self._password
         self._browser["canal"] = "110"
         response = self._browser.submit()
+        self.save_html(response)
 
         self._logged_in = True
 
@@ -35,6 +40,11 @@ class BciScraper(Scraper):
 
     def get_cartola(self, html):
         dom = BeautifulSoup(html)
+
+        return [{"account": cuenta_corriente,
+                 "saldo_disponible": saldo_disponible,
+                 "saldo_contable": saldo_contable,
+                 }]
         dom.find('font', text=re.compile("Cuenta[ \n]+Corriente")).parent.parent.parent.parent.parent.parent.parent.nextSibling.nextSibling
         cartola_row = dom.find('font', text=re.compile("Cuenta[ \n]+Corriente")).parent.parent.parent.parent.parent.parent.parent.nextSibling.nextSibling.contents[1].contents[0].contents[1].contents[1].contents[0].contents[3]
         try:

@@ -1,8 +1,12 @@
+import sys
 import os
 import os.path
 import validate
+import logging
 
-from configobj import ConfigObj
+from configobj import ConfigObj, ConfigObjError
+
+log = logging.getLogger(__name__)
 
 
 class Configuration(ConfigObj):
@@ -12,13 +16,21 @@ class Configuration(ConfigObj):
                                    "data",
                                    "config.spec")
 
-        _filename = os.path.join(os.environ["HOME"], ".config", "bankdat")
+        _filename = os.path.join(os.environ["HOME"], ".config",
+                                 "bankrawler", "bankrawler")
         if not os.path.isfile(_filename):
             f = open(_filename, "w")
             f.close()
 
-        super(Configuration, self).__init__(infile=_filename,
-                                            configspec=self._fspec)
+        try:
+            super(Configuration, self).__init__(infile=_filename)
+        except ConfigObjError, ex:
+            log.error(ex.errors)
+
+            for err in ex.errors:
+                sys.stderr.write("%s\n" % err)
+
+            raise SystemExit
 
         # TODO: write the config spec
         # validator = validate.Validator()
